@@ -1,7 +1,6 @@
 package org.jd.otbphitl.client;
 
 import org.jd.otbphitl.client.canvas.CanvasMap;
-import org.jd.otbphitl.client.resources.TestResources;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
@@ -13,15 +12,14 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class OTBPHITL implements EntryPoint {
 
-	private static final int	COLUMNS	= 250;
-	private static final int	ROWS	= 250;
+	private static final int	COLUMNS	= 25;
+	private static final int	ROWS	= 25;
 
 	private void addBaseLayer(final Map map) {
 		final Tile[][] tiles = new Tile[ROWS][COLUMNS];
 		for (int row = 0; row < ROWS; row++) {
 			for (int column = 0; column < COLUMNS; column++) {
-				tiles[row][column] = new ImageResourceTile(Random.nextBoolean() ? TestResources.INSTANCE.red()
-						: TestResources.INSTANCE.blue());
+				tiles[row][column] = new ImageURLTile("/land" + (Random.nextBoolean() ? "1.png" : "2.png"));
 			}
 		}
 		final Layer layer = new FixedLayer(tiles);
@@ -33,7 +31,7 @@ public class OTBPHITL implements EntryPoint {
 		for (int row = 0; row < ROWS; row++) {
 			for (int column = 0; column < COLUMNS; column++) {
 				if (Random.nextInt(4) == 3) {
-					tiles[row][column] = new ImageURLTile("/" + (Random.nextBoolean() ? "xoverlay.png" : "blackoverlay.png"));
+					tiles[row][column] = new ImageURLTile("/house" + (Random.nextBoolean() ? "1.png" : "2.png"));
 				}
 			}
 		}
@@ -55,7 +53,7 @@ public class OTBPHITL implements EntryPoint {
 
 				return true;
 			}
-		}, 5000);
+		}, 2000);
 
 	}
 

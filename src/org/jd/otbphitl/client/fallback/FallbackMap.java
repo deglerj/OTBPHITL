@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.jd.otbphitl.client.Layer;
 import org.jd.otbphitl.client.Tile;
+import org.jd.otbphitl.client.resources.Images;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
@@ -18,7 +19,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 public class FallbackMap extends org.jd.otbphitl.client.Map {
 
-	private final FlowPanel						container		= new FlowPanel();
+	private final FlowPanel						container	= new FlowPanel();
 
 	private final Map<Layer, ImageElement[][]>	layerToImgs	= new LinkedHashMap<Layer, ImageElement[][]>();
 
@@ -124,7 +125,7 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 	}
 
 	private void prepareImgForPool(final ImageElement img) {
-		img.setSrc("/empty.png");
+		img.setSrc(Images.INSTANCE.empty().getSafeUri().asString());
 	}
 
 	@Override
