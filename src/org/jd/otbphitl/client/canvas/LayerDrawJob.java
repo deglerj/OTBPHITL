@@ -57,18 +57,26 @@ class LayerDrawJob {
 
 	private void drawTileAtPositions(final Context2d ctx, final Tile tile, final Collection<Position> positions) {
 		final Image img = tileImageCache.getImageForTile(tile);
+
+		// Clear URL so setting URL will trigger an onLoad event, this would not
+		// happen if the URL already has the same value (minimal performance
+		// impact, since it should hit the cache)
+		img.setUrl("");
+
 		final HandlerRegistration registration = img.addHandler(new LoadHandler() {
 			@Override
 			public void onLoad(final LoadEvent event) {
+				final ImageElement element = img.getElement().cast();
 				for (final Position position : positions) {
-					final ImageElement element = img.getElement().cast();
 					ctx.drawImage(element, position.getX(), position.getY());
 				}
 
 				imageLoaded();
 			}
 		}, LoadEvent.getType());
+
 		handlerRegistrations.add(registration);
+
 		tile.populateImg(img);
 	}
 

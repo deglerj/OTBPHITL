@@ -1,14 +1,15 @@
 package org.jd.otbphitl.client;
 
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
-public class ImageURLTile implements Tile {
+public class ImageResourceTile implements Tile {
 
-	private final String	url;
+	private final ImageResource	resource;
 
-	public ImageURLTile(final String url) {
-		this.url = url;
+	public ImageResourceTile(final ImageResource resource) {
+		this.resource = resource;
 	}
 
 	@Override
@@ -22,13 +23,13 @@ public class ImageURLTile implements Tile {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final ImageURLTile other = (ImageURLTile) obj;
-		if (url == null) {
-			if (other.url != null) {
+		final ImageResourceTile other = (ImageResourceTile) obj;
+		if (resource == null) {
+			if (other.resource != null) {
 				return false;
 			}
 		}
-		else if (!url.equals(other.url)) {
+		else if (!resource.equals(other.resource)) {
 			return false;
 		}
 		return true;
@@ -38,18 +39,18 @@ public class ImageURLTile implements Tile {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
 		return result;
 	}
 
 	@Override
 	public void populateImg(final Image img) {
-		img.setUrl(url);
+		img.setUrl(resource.getSafeUri());
 	}
 
 	@Override
 	public void populateImg(final ImageElement img) {
-		img.setSrc(url);
+		img.setSrc(resource.getSafeUri().asString());
 	}
 
 }

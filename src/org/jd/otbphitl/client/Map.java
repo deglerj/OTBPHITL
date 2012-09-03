@@ -1,7 +1,7 @@
 package org.jd.otbphitl.client;
 
-
 import org.jd.otbphitl.client.canvas.CanvasMap;
+import org.jd.otbphitl.client.fallback.FallbackMap;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -13,8 +13,7 @@ public abstract class Map extends SimplePanel {
 			return new CanvasMap(tileSize, rows, columns);
 		}
 		else {
-			// FIXME JD use fallback map
-			return null;
+			return new FallbackMap(tileSize, rows, columns);
 		}
 	}
 

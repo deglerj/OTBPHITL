@@ -3,12 +3,13 @@ package org.jd.otbphitl.client.canvas;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jd.otbphitl.client.Map;
 import org.jd.otbphitl.client.Layer;
+import org.jd.otbphitl.client.Map;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 
+//FIXME JD use double buffering
 public class CanvasMap extends Map {
 
 	public static class Position {
