@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 public class FallbackMap extends org.jd.otbphitl.client.Map {
 
-	private final FlowPanel						canvas		= new FlowPanel();
+	private final FlowPanel						container		= new FlowPanel();
 
 	private final Map<Layer, ImageElement[][]>	layerToImgs	= new LinkedHashMap<Layer, ImageElement[][]>();
 
@@ -81,7 +81,7 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 			y += tileSize;
 		}
 
-		canvas.getElement().appendChild(fragment);
+		container.getElement().appendChild(fragment);
 
 		return imgs;
 	}
@@ -103,14 +103,14 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 	}
 
 	private void initWidget() {
-		setWidget(canvas);
+		setWidget(container);
 
 		final int width = calculateWidth();
 		final int height = calculateHeight();
 
-		canvas.setHeight(height + "px");
-		canvas.setWidth(width + "px");
-		canvas.getElement().getStyle().setPosition(Position.RELATIVE);
+		container.setHeight(height + "px");
+		container.setWidth(width + "px");
+		container.getElement().getStyle().setPosition(Position.RELATIVE);
 	}
 
 	private void pool(final ImageElement[][] imgs) {

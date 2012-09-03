@@ -17,15 +17,13 @@ import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Image;
 
-class LayerDrawJob {
+class LayerDrawJob extends Job {
 
 	private final Layer								layer;
 
 	private final Context2d							ctx;
 
 	private final TileImageCache					tileImageCache;
-
-	private LayerDrawJob							nextJob;
 
 	private final double							tileSize;
 
@@ -80,7 +78,7 @@ class LayerDrawJob {
 		tile.populateImg(img);
 	}
 
-	void execute() {
+	public void execute() {
 		final Map<Tile, Collection<Position>> tilesToPositions = new HashMap<Tile, Collection<Position>>();
 
 		final Tile[][] tiles = layer.getTiles();
@@ -112,24 +110,13 @@ class LayerDrawJob {
 		}
 	}
 
-	private void executeNext() {
-		clearHandlerRegistrations();
-
-		if (nextJob != null) {
-			nextJob.execute();
-		}
-	}
-
 	private void imageLoaded() {
 		pendingImageLoads--;
 
 		if (pendingImageLoads == 0) {
+			clearHandlerRegistrations();
 			executeNext();
 		}
-	}
-
-	void setNextJob(final LayerDrawJob nextJob) {
-		this.nextJob = nextJob;
 	}
 
 }

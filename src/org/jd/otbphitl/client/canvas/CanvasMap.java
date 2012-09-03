@@ -8,8 +8,8 @@ import org.jd.otbphitl.client.Map;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.user.client.ui.FlowPanel;
 
-//FIXME JD use double buffering
 public class CanvasMap extends Map {
 
 	public static class Position {
@@ -33,7 +33,11 @@ public class CanvasMap extends Map {
 
 	private final TileImageCache	tileImageCache	= new TileImageCache();
 
-	private final Canvas			canvas			= Canvas.createIfSupported();
+	private final FlowPanel			container		= new FlowPanel();
+
+	private int						currentCanvas	= 0;
+
+	private final Canvas[]			canvases		= { Canvas.createIfSupported(), Canvas.createIfSupported() };
 
 	private final List<Layer>		layers			= new ArrayList<Layer>();
 
@@ -49,21 +53,38 @@ public class CanvasMap extends Map {
 		redraw();
 	}
 
+	private Canvas getHiddenCanvas() {
+		if (currentCanvas == 0) {
+			return canvases[1];
+		}
+		else {
+			return canvases[0];
+		}
+	}
+
 	private void initWidget() {
-		setWidget(canvas);
+		setWidget(container);
+		container.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
 
-		final int width = calculateWidth();
-		final int height = calculateHeight();
+		for (final Canvas canvas : canvases) {
+			canvas.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.ABSOLUTE);
+			final int width = calculateWidth();
+			final int height = calculateHeight();
 
-		canvas.setHeight(height + "px");
-		canvas.setWidth(width + "px");
+			canvas.setHeight(height + "px");
+			canvas.setWidth(width + "px");
 
-		canvas.setCoordinateSpaceHeight(height);
-		canvas.setCoordinateSpaceWidth(width);
+			canvas.setCoordinateSpaceHeight(height);
+			canvas.setCoordinateSpaceWidth(width);
+
+			container.add(canvas);
+		}
+
+		canvases[1].setVisible(false);
 	}
 
 	private void redraw() {
-		final Context2d ctx = canvas.getContext2d();
+		final Context2d ctx = getHiddenCanvas().getContext2d();
 
 		ctx.clearRect(0, 0, calculateWidth(), calculateHeight());
 
@@ -76,14 +97,33 @@ public class CanvasMap extends Map {
 			drawJobs.get(i).setNextJob(drawJobs.get(i + 1));
 		}
 
-		drawJobs.get(0).execute();
+		drawJobs.get(drawJobs.size() - 1).setNextJob(new Job() {
+			@Override
+			public void execute() {
+				swapCanvas();
+			}
+		});
 
+		drawJobs.get(0).execute();
 	}
 
 	@Override
 	public void removeLayer(final Layer layer) {
 		layers.remove(layer);
 		redraw();
+	}
+
+	private void swapCanvas() {
+		if (currentCanvas == 0) {
+			canvases[0].setVisible(false);
+			canvases[1].setVisible(true);
+			currentCanvas = 1;
+		}
+		else {
+			canvases[0].setVisible(true);
+			canvases[1].setVisible(false);
+			currentCanvas = 0;
+		}
 	}
 
 }

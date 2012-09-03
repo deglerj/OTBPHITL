@@ -13,8 +13,8 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class OTBPHITL implements EntryPoint {
 
-	private static final int	COLUMNS	= 50;
-	private static final int	ROWS	= 50;
+	private static final int	COLUMNS	= 250;
+	private static final int	ROWS	= 250;
 
 	private void addBaseLayer(final Map map) {
 		final Tile[][] tiles = new Tile[ROWS][COLUMNS];
