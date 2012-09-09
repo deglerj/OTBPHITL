@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 public class FallbackMap extends org.jd.otbphitl.client.Map {
@@ -94,6 +95,12 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 		return imgs;
 	}
 
+	@Override
+	protected HasAllMouseHandlers getMouseEventCaptureWidget() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private ImageElement[][] getOrCreateImgs() {
 		if (imgPool.isEmpty()) {
 			return createNewImgs();
@@ -125,7 +132,7 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 	}
 
 	private void prepareImgForPool(final ImageElement img) {
-		img.setSrc(Images.INSTANCE.empty().getSafeUri().asString());
+		img.setSrc(Images.BUNDLE.empty().getSafeUri().asString());
 	}
 
 	@Override
@@ -134,6 +141,24 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 		pool(imgs);
 
 		layerToImgs.remove(layer);
+	}
+
+	@Override
+	public void setSelectionAlpha(final double selectionAlpha) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setSelectionColor(final String selectionColor) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void setSelectionLayer(final boolean[][] selectedTiles) {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void updateZIndex() {

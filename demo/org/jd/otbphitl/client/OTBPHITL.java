@@ -30,31 +30,13 @@ public class OTBPHITL implements EntryPoint {
 		final Tile[][] tiles = new Tile[ROWS][COLUMNS];
 		for (int row = 0; row < ROWS; row++) {
 			for (int column = 0; column < COLUMNS; column++) {
-				if (Random.nextInt(4) == 3) {
+				if (Random.nextInt(50) == 1) {
 					tiles[row][column] = new ImageURLTile("/house" + (Random.nextBoolean() ? "1.png" : "2.png"));
 				}
 			}
 		}
 		final Layer layer = new FixedLayer(tiles);
-
-		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-			boolean	added;
-
-			@Override
-			public boolean execute() {
-				if (added) {
-					map.removeLayer(layer);
-				}
-				else {
-					map.addLayer(layer);
-				}
-
-				added = !added;
-
-				return true;
-			}
-		}, 2000);
-
+		map.addLayer(layer);
 	}
 
 	@Override
@@ -64,6 +46,14 @@ public class OTBPHITL implements EntryPoint {
 
 		addBaseLayer(map);
 
-		addOverlayLayer(map);
+		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+			@Override
+			public boolean execute() {
+				addOverlayLayer(map);
+				return true;
+			}
+		}, 10000);
+
+		map.setSelectionHandlingEnabled(true);
 	}
 }

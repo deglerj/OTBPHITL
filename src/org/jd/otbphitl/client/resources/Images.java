@@ -6,7 +6,7 @@ import com.google.gwt.resources.client.ImageResource;
 
 public interface Images extends ClientBundle {
 
-	Images	INSTANCE	= GWT.create(Images.class);
+	Images	BUNDLE	= GWT.create(Images.class);
 
 	ImageResource empty();
 

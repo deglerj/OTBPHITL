@@ -4,6 +4,7 @@ import org.jd.otbphitl.client.canvas.CanvasMap;
 import org.jd.otbphitl.client.fallback.FallbackMap;
 
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 public abstract class Map extends SimplePanel {
@@ -17,11 +18,13 @@ public abstract class Map extends SimplePanel {
 		}
 	}
 
-	private final int	tileSize;
+	private final int			tileSize;
 
-	private final int	columns;
+	private final int			columns;
 
-	private final int	rows;
+	private final int			rows;
+
+	private MapSelectionHandler	selectionHandler;
 
 	public Map(final int tileSize, final int rows, final int columns) {
 		this.tileSize = tileSize;
@@ -29,8 +32,6 @@ public abstract class Map extends SimplePanel {
 		this.rows = rows;
 
 		initWidget();
-
-		getElement().getStyle().setBackgroundColor("black");
 	}
 
 	public abstract void addLayer(final Layer layer);
@@ -47,8 +48,14 @@ public abstract class Map extends SimplePanel {
 		return columns;
 	}
 
+	protected abstract HasAllMouseHandlers getMouseEventCaptureWidget();
+
 	protected int getRows() {
 		return rows;
+	}
+
+	public boolean[][] getSelection() {
+		return selectionHandler.getSelected();
 	}
 
 	protected int getTileSize() {
@@ -61,5 +68,19 @@ public abstract class Map extends SimplePanel {
 	}
 
 	public abstract void removeLayer(final Layer layer);
+
+	public abstract void setSelectionAlpha(double selectionAlpha);
+
+	public abstract void setSelectionColor(String selectionColor);
+
+	public void setSelectionHandlingEnabled(final boolean enabled) {
+		if (selectionHandler == null) {
+			selectionHandler = new MapSelectionHandler(getMouseEventCaptureWidget(), this);
+		}
+
+		selectionHandler.setSelectionHandlingEnabled(enabled);
+	}
+
+	protected abstract void setSelectionLayer(boolean[][] selectedTiles);
 
 }
