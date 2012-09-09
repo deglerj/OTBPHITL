@@ -26,6 +26,8 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 
 	private final Collection<ImageElement[][]>	imgPool		= new ArrayList<ImageElement[][]>();
 
+	private SelectionPanel						selectionPanel;
+
 	public FallbackMap(final int tileSize, final int rows, final int columns) {
 		super(tileSize, rows, columns);
 
@@ -88,6 +90,12 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 		return imgs;
 	}
 
+	private void ensureSelectionPanelPresent() {
+		if (selectionPanel == null) {
+			initSelectionPanel();
+		}
+	}
+
 	private ImageElement[][] getImgsFromPool() {
 		final Iterator<ImageElement[][]> i = imgPool.iterator();
 		final ImageElement[][] imgs = i.next();
@@ -97,8 +105,9 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 
 	@Override
 	protected HasAllMouseHandlers getMouseEventCaptureWidget() {
-		// TODO Auto-generated method stub
-		return null;
+		ensureSelectionPanelPresent();
+
+		return selectionPanel;
 	}
 
 	private ImageElement[][] getOrCreateImgs() {
@@ -108,6 +117,15 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 		else {
 			return getImgsFromPool();
 		}
+	}
+
+	private void initSelectionPanel() {
+		selectionPanel = new SelectionPanel(getTileSize());
+		selectionPanel.setWidth(calculateWidth() + "px");
+		selectionPanel.setHeight(calculateHeight() + "px");
+		selectionPanel.getElement().getStyle().setZIndex(9003);
+		selectionPanel.getElement().getStyle().setPosition(Position.RELATIVE);
+		container.add(selectionPanel);
 	}
 
 	private void initWidget() {
@@ -145,20 +163,23 @@ public class FallbackMap extends org.jd.otbphitl.client.Map {
 
 	@Override
 	public void setSelectionAlpha(final double selectionAlpha) {
-		// TODO Auto-generated method stub
+		ensureSelectionPanelPresent();
 
+		selectionPanel.setSelectionAlpha(selectionAlpha);
 	}
 
 	@Override
 	public void setSelectionColor(final String selectionColor) {
-		// TODO Auto-generated method stub
+		ensureSelectionPanelPresent();
 
+		selectionPanel.setSelectionColor(selectionColor);
 	}
 
 	@Override
 	protected void setSelectionLayer(final boolean[][] selectedTiles) {
-		// TODO Auto-generated method stub
+		ensureSelectionPanelPresent();
 
+		selectionPanel.setSelectionLayer(selectedTiles);
 	}
 
 	private void updateZIndex() {

@@ -14,38 +14,19 @@ import com.google.gwt.user.client.ui.Image;
 
 public class CanvasMap extends Map {
 
-	public static class Position {
-		private final double	x;
-		private final double	y;
+	private final TileImageCache	tileImageCache	= new TileImageCache();
 
-		public Position(final double x, final double y) {
-			this.x = x;
-			this.y = y;
-		}
+	private final FlowPanel			container		= new FlowPanel();
 
-		public double getX() {
-			return x;
-		}
+	private int						currentCanvas	= 0;
 
-		public double getY() {
-			return y;
-		}
+	private final Canvas[]			canvases		= { Canvas.createIfSupported(), Canvas.createIfSupported() };
 
-	}
+	private final List<Layer>		layers			= new ArrayList<Layer>();
 
-	private final TileImageCache		tileImageCache	= new TileImageCache();
+	private Image					mouseEventWidget;
 
-	private final FlowPanel				container		= new FlowPanel();
-
-	private int							currentCanvas	= 0;
-
-	private final Canvas[]				canvases		= { Canvas.createIfSupported(), Canvas.createIfSupported() };
-
-	private final List<Layer>			layers			= new ArrayList<Layer>();
-
-	private Image						mouseEventWidget;
-
-	private SelectionCanvas	selectionDelegate;
+	private SelectionCanvas			selectionCanvas;
 
 	public CanvasMap(final int tileSize, final int rows, final int columns) {
 		super(tileSize, rows, columns);
@@ -57,6 +38,12 @@ public class CanvasMap extends Map {
 	public void addLayer(final Layer layer) {
 		layers.add(layer);
 		redraw();
+	}
+
+	private void ensureSelectionCanvasPresent() {
+		if (selectionCanvas == null) {
+			initSelectionCanvas();
+		}
 	}
 
 	private Canvas getHiddenCanvas() {
@@ -98,10 +85,10 @@ public class CanvasMap extends Map {
 		canvas.setCoordinateSpaceWidth(width);
 	}
 
-	private void initSelectionLayer() {
-		selectionDelegate = new SelectionCanvas(getRows(), getColumns(), getTileSize());
+	private void initSelectionCanvas() {
+		selectionCanvas = new SelectionCanvas(getRows(), getColumns(), getTileSize());
 
-		final Canvas canvas = selectionDelegate.getCanvas();
+		final Canvas canvas = selectionCanvas.getCanvas();
 		initCanvas(canvas);
 		canvas.getElement().getStyle().setZIndex(9000);
 		canvas.getElement().setId("selectionCanvas");
@@ -156,21 +143,23 @@ public class CanvasMap extends Map {
 
 	@Override
 	public void setSelectionAlpha(final double selectionAlpha) {
-		selectionDelegate.setSelectionAlpha(selectionAlpha);
+		ensureSelectionCanvasPresent();
+
+		selectionCanvas.setSelectionAlpha(selectionAlpha);
 	}
 
 	@Override
 	public void setSelectionColor(final String selectionColor) {
-		selectionDelegate.setSelectionColor(selectionColor);
+		ensureSelectionCanvasPresent();
+
+		selectionCanvas.setSelectionColor(selectionColor);
 	}
 
 	@Override
 	protected void setSelectionLayer(final boolean[][] selectedTiles) {
-		if (selectionDelegate == null) {
-			initSelectionLayer();
-		}
+		ensureSelectionCanvasPresent();
 
-		selectionDelegate.setSelectionLayer(selectedTiles);
+		selectionCanvas.setSelectionLayer(selectedTiles);
 	}
 
 	private void swapCanvas() {

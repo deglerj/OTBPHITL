@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jd.otbphitl.client.Layer;
+import org.jd.otbphitl.client.Position;
 import org.jd.otbphitl.client.Tile;
-import org.jd.otbphitl.client.canvas.CanvasMap.Position;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
@@ -25,20 +25,20 @@ class LayerDrawJob extends Job {
 
 	private final TileImageCache					tileImageCache;
 
-	private final double							tileSize;
+	private final int								tileSize;
 
 	private final Collection<HandlerRegistration>	handlerRegistrations	= new ArrayList<HandlerRegistration>();
 
 	private int										pendingImageLoads		= 0;
 
-	LayerDrawJob(final Layer layer, final Context2d ctx, final TileImageCache tileImageCache, final double tileSize) {
+	LayerDrawJob(final Layer layer, final Context2d ctx, final TileImageCache tileImageCache, final int tileSize) {
 		this.layer = layer;
 		this.ctx = ctx;
 		this.tileImageCache = tileImageCache;
 		this.tileSize = tileSize;
 	}
 
-	private void addTilePosition(final Map<Tile, Collection<Position>> tilesToPositions, final double y, final double x, final Tile tile) {
+	private void addTilePosition(final Map<Tile, Collection<Position>> tilesToPositions, final int y, final int x, final Tile tile) {
 		Collection<Position> positions = tilesToPositions.get(tile);
 		if (positions == null) {
 			positions = new ArrayList<Position>();
@@ -78,6 +78,7 @@ class LayerDrawJob extends Job {
 		tile.populateImg(img);
 	}
 
+	@Override
 	public void execute() {
 		final Map<Tile, Collection<Position>> tilesToPositions = new HashMap<Tile, Collection<Position>>();
 
@@ -86,9 +87,9 @@ class LayerDrawJob extends Job {
 		final int rows = tiles.length;
 		final int columns = tiles[0].length;
 
-		double y = 0;
+		int y = 0;
 		for (int row = 0; row < rows; row++) {
-			double x = 0;
+			int x = 0;
 			for (int column = 0; column < columns; column++) {
 				final Tile tile = tiles[row][column];
 
